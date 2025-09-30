@@ -48,3 +48,60 @@ func IndexOfMinimum(values []int) int {
 	}
 	return minimumIndex
 }
+
+func CompressToRanks(vals []int) []int {
+	n := len(vals)
+	if n == 0 {
+		return []int{}
+	}
+	// Make a copy and sort
+	sorted := make([]int, n)
+	copy(sorted, vals)
+	return compressUsingSort(vals)
+}
+
+// Split to keep imports simple
+func compressUsingSort(vals []int) []int {
+	tmp := make([]int, len(vals))
+	copy(tmp, vals)
+	sortInts(tmp)
+
+	rank := make(map[int]int, len(tmp))
+	for index, value := range tmp {
+		rank[value] = index
+	}
+	compact := make([]int, len(vals))
+	for index, value := range vals {
+		compact[index] = rank[value]
+	}
+	return compact
+}
+
+func sortInts(a []int) {
+	if len(a) < 2 {
+		return
+	}
+	quickSort(a, 0, len(a)-1)
+}
+
+func quickSort(a []int, lo, hi int) {
+	if lo >= hi {
+		return
+	}
+	p := partition(a, lo, hi)
+	quickSort(a, lo, p-1)
+	quickSort(a, p+1, hi)
+}
+
+func partition(a []int, lo, hi int) int {
+	pivot := a[hi]
+	i := lo
+	for j := lo; j < hi; j++ {
+		if a[j] < pivot {
+			a[i], a[j] = a[j], a[i]
+			i++
+		}
+	}
+	a[i], a[hi] = a[hi], a[i]
+	return i
+}
