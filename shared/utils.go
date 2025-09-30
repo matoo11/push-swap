@@ -33,3 +33,18 @@ func ParseArgs(args []string) ([]int, error) {
 	}
 	return parsedNumbers, nil
 }
+
+func IndexOfMinimum(values []int) int {
+	if len(values) == 0 {
+		return -1
+	}
+	minimumIndex := 0
+	minimumValue := values[0]
+	for index := 1; index < len(values); index++ {
+		if values[index] < minimumValue {
+			minimumValue = values[index]
+			minimumIndex = index
+		}
+	}
+	return minimumIndex
+}
