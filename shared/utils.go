@@ -5,7 +5,6 @@ import (
 	"strings"
 )
 
-
 func ParseArgs(args []string) ([]int, error) {
 	tokens := make([]string, 0, len(args))
 	for _, argument := range args {
@@ -54,9 +53,6 @@ func CompressToRanks(vals []int) []int {
 	if n == 0 {
 		return []int{}
 	}
-	// Make a copy and sort
-	sorted := make([]int, n)
-	copy(sorted, vals)
 	return compressUsingSort(vals)
 }
 

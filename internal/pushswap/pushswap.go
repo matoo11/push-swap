@@ -96,10 +96,44 @@ func chunkSort(stacks *shared.Stacks, applyOperation func(string)) {
 	}
 
 	for len(stacks.StackB) > 0 {
-		index := indexOfMax(stacks.StackB)
-		bringIndexToTopB(stacks, index, applyOperation)
+		maxIndex := indexOfMax(stacks.StackB)
+		if len(stacks.StackB) < 2 {
+			bringIndexToTopB(stacks, maxIndex, applyOperation)
+			applyOperation("pa")
+			continue
+		}
+		// Pushing the second largest first and swapping afterwards is often cheaper.
+		secondIndex := indexOfValue(stacks.StackB, stacks.StackB[maxIndex]-1)
+		if secondIndex != -1 && rotationCost(len(stacks.StackB), secondIndex)+1 < rotationCost(len(stacks.StackB), maxIndex) {
+			bringIndexToTopB(stacks, secondIndex, applyOperation)
+			applyOperation("pa")
+			bringIndexToTopB(stacks, indexOfMax(stacks.StackB), applyOperation)
+			applyOperation("pa")
+			applyOperation("sa")
+			continue
+		}
+		bringIndexToTopB(stacks, maxIndex, applyOperation)
 		applyOperation("pa")
 	}
+}
+
+func rotationCost(length, index int) int {
+	if index <= 1 {
+		return index
+	}
+	if index <= length/2 {
+		return index
+	}
+	return length - index
+}
+
+func indexOfValue(values []int, target int) int {
+	for index, value := range values {
+		if value == target {
+			return index
+		}
+	}
+	return -1
 }
 
 func chooseChunkSize(n int) int {
